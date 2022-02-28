@@ -4,9 +4,16 @@ const { sequelize } = require("./src/db");
 
 const PORT = process.env.PORT || 3000;
 
-sequelize
-  .authenticate()
-  .then(() =>
-    app.listen(PORT, () => console.log(`Server listening on port ${PORT}`))
-  )
-  .catch((e) => console.log(e));
+const start = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log(">>> DB connected.");
+    await sequelize.sync({ force: false });
+    console.log(">>> DB Synchronized.");
+    app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+start();

@@ -1,31 +1,53 @@
-const sgMail = require("@sendgrid/mail");
-const User = require("../../models/User");
+const { User } = require("../../db");
+const {
+  comparePassword,
+  hashPassword,
+} = require("../../utils/passwordManagment");
+const { generateToken } = require("../../utils/tokenManagment");
+const sendEmail = require("../../utils/sendEmail");
 
-const sendEmail = async (to) => {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const register = async (req, res) => {
+  const [userExists] = await User.findAll({ where: { email: req.body.email } });
+  const { email, password } = req.body;
 
-  const msg = {
-    to,
-    from: process.env.MAIL_ADDRESS,
-    subject: "Welcome to Disney API!",
-    text: "Have fun!",
-    html: "<strong>Have fun!</strong>",
-  };
+  if (userExists)
+    return res.status(400).json({ error: "That user already exists" });
 
-  sgMail
-    .send(msg)
-    .then(() => {
-      console.log("Email sent");
-    })
-    .catch((error) => {
-      console.error(error);
+  try {
+    const newUser = await User.create({
+      email,
+      password: await hashPassword(password),
     });
+    sendEmail(newUser.email);
+    res.status(201).json({ message: "User created successfully", email });
+  } catch (e) {
+    res.status(404).send("There was an error, please, try again.");
+    console.log(e);
+  }
 };
+const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    if (!(email && password))
+      return res
+        .status(400)
+        .json({ error: "Email and password must be completed" });
+    const user = await User.findOne({ where: { email } });
+    const isPasswordCorrect = user
+      ? await comparePassword(password, user.password)
+      : false;
 
-const register = async (req, res, next) => {
-  const [userExists] = await User.find;
+    if (isPasswordCorrect) {
+      const token = generateToken(user.id);
+      return res.status(200).json({ token });
+    }
+    res.status(400).json({ error: "Incorrect email or password" });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 module.exports = {
-  sendEmail,
+  register,
+  login,
 };

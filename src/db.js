@@ -9,6 +9,9 @@ const { DB_URI } = process.env;
 const sequelize = new Sequelize(DB_URI, {
   logging: false,
   native: false,
+  define: {
+    timestamps: false,
+  },
 });
 
 const Character = CharacterModel(sequelize, DataTypes);
