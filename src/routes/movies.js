@@ -32,11 +32,49 @@ const router = Router();
  *          minimum: 1
  *          maximum: 5
  *          description: Movie's rating
+ *        genres:
+ *          type: array
+ *          items:
+ *            type: object
+ *            properties:
+ *              name:
+ *                type: string
+ *                description: Genres names
  *      example:
  *        title: "Esperando la carroza"
  *        image: "carroza.jpg"
- *        creationDate: "10/10/2010"
+ *        creationDate: "10-10-2010"
  *        rating: 3
+ *        genres: [{name: Comedy}, {name: Action}]
+ *    MovieInput:
+ *      type: object
+ *      required: [title, image, creationDate, rating]
+ *      properties:
+ *        title:
+ *          type: string
+ *          description: Movie's title
+ *        image:
+ *          type: string
+ *          description: Image URL.
+ *        creationDate:
+ *          type: string
+ *          description: Creation date of the movie (MM-DD-YYYY)
+ *        rating:
+ *          type: number
+ *          minimum: 1
+ *          maximum: 5
+ *          description: Movie's rating
+ *        genres:
+ *          type: array
+ *          items:
+ *            type: string
+ *            description: Genres names
+ *      example:
+ *        title: "Esperando la carroza"
+ *        image: "carroza.jpg"
+ *        creationDate: "10-10-2010"
+ *        rating: 3
+ *        genres: ["Action", "Comedy"]
  *    MovieArr:
  *      type: array
  *      items:
@@ -160,7 +198,7 @@ router.get("/:id", authManagment, getOneMovie);
  *      content:
  *        application/json:
  *          schema:
- *            $ref: "#/components/schemas/Movie"
+ *            $ref: "#/components/schemas/MovieInput"
  *    responses:
  *      201:
  *        description: Movie created
@@ -188,7 +226,6 @@ router.post("/", authManagment, addMovie);
  *        name: id
  *        schema:
  *          type: text
- *        required: true
  *        description: Movie ID
  *    requestBody:
  *      required: true
@@ -221,7 +258,6 @@ router.put("/:id", authManagment, updateMovie);
  *    parameters:
  *      - in: path
  *        name: id
- *        required: true
  *        schema:
  *          type: text
  *        description: Movie ID

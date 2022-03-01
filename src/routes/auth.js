@@ -88,7 +88,7 @@ router.post("/register", register);
  *            $ref: "#/components/schemas/User"
  *
  *    responses:
- *      201:
+ *      200:
  *        description: Logged in
  *        content:
  *          application/json:

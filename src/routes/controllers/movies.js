@@ -45,7 +45,7 @@ const getOneMovie = async (req, res) => {
           through: { attributes: [] },
           attributes: ["name"],
         },
-        { model: Genre, attributes: ["name"] },
+        { model: Genre, attributes: ["name"], through: { attributes: [] } },
       ],
     });
     if (!movie) return res.status(404).json({ error: "Movie not found!" });
@@ -59,13 +59,20 @@ const getOneMovie = async (req, res) => {
 
 const addMovie = async (req, res) => {
   const userId = req.user;
+  const { genres } = req.body;
   try {
     console.log(req.user);
     const movie = await Movie.create({ ...req.body, userId });
+    const genresFound = await Genre.findAll({ where: { name: genres } });
+    await movie.addGenre(genresFound);
     const newMovie = await Movie.findOne({
       where: { id: movie.id },
       attributes: ["id", "title", "image", "creationDate", "rating"],
-      include: { model: Genre, attributes: ["name"] },
+      include: {
+        model: Genre,
+        attributes: ["name"],
+        through: { attributes: [] },
+      },
     });
     res.status(201).json(newMovie);
   } catch (e) {

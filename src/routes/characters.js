@@ -214,11 +214,10 @@ router.put("/:id", authManagment, updateChar);
  *    summary: Deletes a character
  *    tags: [Character]
  *    security:
- *      bearerAuth: []
+ *      - bearerAuth: []
  *    parameters:
  *      - in: path
  *        name: id
- *        required: true
  *        schema:
  *          type: text
  *        description: Character ID
