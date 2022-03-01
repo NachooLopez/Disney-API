@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NachooLopez/alkemy-backend.git"
+    "url": "git+https://github.com/NachooLopez/Disney-API.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/NachooLopez/alkemy-backend/issues"
+    "url": "https://github.com/NachooLopez/Disney-API/issues"
   },
-  "homepage": "https://github.com/NachooLopez/alkemy-backend#readme",
+  "homepage": "https://github.com/NachooLopez/Disney-API#readme",
   "dependencies": {
     "@sendgrid/mail": "^7.6.1",
     "bcryptjs": "^2.4.3",
